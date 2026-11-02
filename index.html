@@ -230,15 +230,18 @@ async function fetchOne(source, index){
  const controller = new AbortController(), timer = setTimeout(() => controller.abort(), 20000);
  try {
   const response = await fetch(url, { signal: controller.signal, cache: "no-store" });
-  if (!response.ok) throw new Error("Proxy antwortet mit " + response.status);
+  if (!response.ok) throw new Error("HTTP-Status " + response.status);
   const data = await response.json();
   const text = data.contents;
-  if (!text || text.length < 20) throw new Error("Leerer Feed");
+  if (!text || text.length < 20) throw new Error("Feed leer/blockiert");
   return parseFeed(text, source, index);
+ } catch(e) {
+  // Zeigt den exakten Fehler direkt auf dem Bildschirm an!
+  $("status").textContent = `Fehler bei ${source.name}: ${e.message}`;
+  throw e;
  } finally {
   clearTimeout(timer);
  }
-}
 }
 async function refresh(){
  $("refreshBtn").disabled=true;$("status").textContent="Die Feeds werden eingesammelt …";
