@@ -225,17 +225,20 @@ function parseFeed(xmlText,source,index){
   return {id:source.url+"|"+guid,source:source.name,sourceUrl:source.url,sourcePaywall:!!source.paywall,title:plain(get("title"))||"Ohne Titel",description,content:content||description,link,date:get("pubDate")||get("published")||get("updated")||get("date")};
  });
 }
-async function fetchOne(source,index){
- const url=PROXY+source.url;
- try{
-  const response=await fetch(url,{cache:"no-store"});
-  if(!response.ok)throw new Error("Proxy antwortet mit "+response.status);
-  const text=await response.text();
-  if(!text||text.length<20)throw new Error("Leerer Feed");
-  return parseFeed(text,source,index);
- }catch(e){
-  console.warn("Fehler bei Quelle:", source.name, e);
-  throw e;
+async function fetchOne(source, index){
+ const url = "https://api.allorigins.win/get?url=" + encodeURIComponent(source.url);
+ const controller = new AbortController(), timer = setTimeout(() => controller.abort(), 20000);
+ try {
+  const response = await fetch(url, { signal: controller.signal, cache: "no-store" });
+  if (!response.ok) throw new Error("Proxy antwortet mit " + response.status);
+  const data = await response.json();
+  const text = data.contents;
+  if (!text || text.length < 20) throw new Error("Leerer Feed");
+  return parseFeed(text, source, index);
+ } finally {
+  clearTimeout(timer);
+ }
+}
 }
 async function refresh(){
  $("refreshBtn").disabled=true;$("status").textContent="Die Feeds werden eingesammelt …";
