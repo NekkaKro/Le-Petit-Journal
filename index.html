@@ -1,315 +1,199 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#191a1b">
-<meta name="color-scheme" content="dark">
-<title>Le Petit Journal</title>
-<style>
-:root{
- --bg:#191a1b;--surface:#222426;--surface2:#292b2d;--paper:#242321;
- --ink:#e9e2d6;--soft:#c8c0b4;--muted:#99958d;--line:#3a3935;
- --sage:#b7c3b1;--gold:#cdbb98;--rose:#c7a9a4;--blue:#aebdca;
- --serif:Georgia,"Times New Roman",serif;--sans:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
- --reading-size:19px;--reading-font:Georgia,"Times New Roman",serif;
-}
-*{box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{margin:0;background:radial-gradient(ellipse at 10% -10%,#34332e 0%,transparent 42%),var(--bg);color:var(--ink);font-family:var(--sans);min-height:100vh}
-button,input,select{font:inherit}
-button{cursor:pointer}
-button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--sage);outline-offset:3px}
-header{max-width:980px;margin:auto;padding:27px 20px 17px;display:flex;align-items:center;justify-content:space-between;gap:15px}
-.brand{display:flex;align-items:center;gap:12px;min-width:0}
-.moon{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(145deg,#d8c9ad,#aeb9aa);color:#282923;font-size:22px;box-shadow:0 5px 20px #0003}
-h1{font:500 clamp(21px,4vw,28px)/1.1 var(--serif);letter-spacing:.015em;margin:0}
-.tagline{font-size:10px;letter-spacing:.17em;color:var(--muted);margin-top:5px;text-transform:uppercase}
-.header-actions{display:flex;gap:8px}
-.btn{border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:10px 13px;border-radius:999px;font-size:13px;transition:background .2s,border-color .2s,transform .2s}
-.btn:hover{background:var(--surface2);border-color:#68665d}
-.btn:active{transform:scale(.98)}
-.btn.primary{background:var(--sage);border-color:var(--sage);color:#222820}
-.btn.quiet{background:transparent}
-main{max-width:980px;margin:auto;padding:0 20px 70px}
-.toolbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:14px 16px;margin:12px 0 27px;border:1px solid var(--line);border-radius:15px;background:#222426d9}
-.tools-left,.tools-right{display:flex;align-items:center;gap:13px;flex-wrap:wrap}
-.toggle{display:flex;align-items:center;gap:8px;color:var(--soft);font-size:12px}
-.switch{appearance:none;width:36px;height:21px;background:#55534d;border-radius:20px;position:relative;transition:.2s;margin:0;flex:none}
-.switch:before{content:"";position:absolute;width:15px;height:15px;top:3px;left:3px;border-radius:50%;background:#eee6d9;transition:.2s}
-.switch:checked{background:#91a18f}.switch:checked:before{left:18px;background:#20251f}
-select,.field{background:#191b1c;color:var(--ink);border:1px solid var(--line);border-radius:9px;padding:9px 10px;font-size:12px;max-width:100%}
-.section-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin:0 2px 13px}
-.section-head h2{font:500 22px var(--serif);margin:0}
-.small-muted{font-size:11px;color:var(--muted)}
-.tabs{display:flex;gap:7px;margin:0 0 16px}
-.tab{border:1px solid var(--line);background:transparent;color:var(--muted);padding:8px 13px;border-radius:999px;font-size:12px}
-.tab.active{background:#343a34;border-color:#687767;color:#e2e8df}
-.feed{display:grid;gap:13px}
-.article{border:1px solid var(--line);border-radius:16px;background:linear-gradient(135deg,#292a28,#222426);padding:20px 21px;transition:transform .2s,border-color .2s,background .2s;cursor:pointer}
-.article:hover{transform:translateY(-2px);border-color:#667363;background:linear-gradient(135deg,#30312d,#252829)}
-.meta{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-bottom:12px}
-.badge{font-size:9px;letter-spacing:.09em;text-transform:uppercase;border-radius:999px;padding:5px 9px;background:#bdc9b7;color:#252b24}
-.badge.b1{background:#d1bea0;color:#332b20}.badge.b2{background:#b9c6d2;color:#242d36}.badge.b3{background:#cbb2bd;color:#33242b}.badge.b4{background:#c8c2a9;color:#302d22}
-.date{font-size:10px;color:var(--muted)}
-.article h3{font:500 23px/1.28 var(--reading-font);margin:0 0 9px;max-width:780px}
-.excerpt{font:var(--reading-size)/1.58 var(--reading-font);color:#c9c3b9;margin:0 0 15px;max-width:790px}
-.card-foot{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
-.card-hint{font-size:10px;color:var(--muted)}
-.open-hint{font-size:11px;color:var(--sage)}
-.empty{border:1px dashed var(--line);border-radius:16px;text-align:center;padding:45px 18px;color:var(--muted);line-height:1.7}
-.empty strong{display:block;font:500 21px var(--serif);color:var(--ink);margin-bottom:7px}
-.notice{font-size:10px;line-height:1.6;color:#89867e;margin:20px 3px 0}
-.overlay{position:fixed;inset:0;background:#0c0d0deF;z-index:10;display:none;overflow:auto;padding:18px;align-items:flex-start;justify-content:center}
-.overlay.open{display:flex}
-.modal{width:min(620px,100%);margin:auto;background:#242625;border:1px solid #4b4b43;border-radius:18px;padding:22px;box-shadow:0 20px 80px #0009}
-.modal-head{display:flex;justify-content:space-between;align-items:center;gap:10px}
-.modal h2{font:500 23px var(--serif);margin:0}
-.help{font-size:11px;line-height:1.65;color:var(--muted);margin:9px 0 17px}
-.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-label.field-label{display:block;font-size:11px;color:var(--muted);margin:10px 0 6px}
-.field{width:100%;font-size:13px}
-.source-list{display:grid;gap:8px;margin-top:17px}
-.source-row{display:flex;justify-content:space-between;align-items:center;gap:12px;background:#191c1c;border:1px solid var(--line);border-radius:11px;padding:10px 12px}
-.source-row strong{font-size:12px}.source-row small{display:block;color:var(--muted);font-size:10px;overflow-wrap:anywhere;margin-top:3px}
-.remove{border:0;background:transparent;color:var(--rose);font-size:19px;padding:4px 8px}
-.modal-foot{display:flex;justify-content:flex-end;gap:8px;margin-top:17px}
-.read-overlay{position:fixed;inset:0;z-index:20;background:#171817f7;display:none;overflow:auto}
-.read-overlay.open{display:block;animation:fade .22s ease}
-@keyframes fade{from{opacity:0}to{opacity:1}}
-.read-top{max-width:850px;margin:auto;padding:19px 20px;display:flex;justify-content:space-between;align-items:center;gap:12px;position:sticky;top:0;background:#191a1bf2;backdrop-filter:blur(12px);border-bottom:1px solid #383832}
-.read-tools{display:flex;gap:8px;flex-wrap:wrap}
-.read-page{max-width:720px;margin:0 auto;padding:52px 28px 90px}
-.read-page .meta{margin-bottom:22px}
-.read-page h2{font:500 clamp(30px,5vw,44px)/1.2 var(--serif);letter-spacing:-.02em;margin:0 0 17px;color:#eee6d9}
-.read-deck{font:italic 19px/1.6 var(--serif);color:#c4b9a7;margin:0 0 27px}
-.read-body{font:var(--reading-size)/1.85 var(--reading-font);color:#ded7ca;white-space:pre-wrap;overflow-wrap:anywhere}
-.read-body p{margin:0 0 1.25em}
-.read-source{border-top:1px solid #3a3934;margin-top:35px;padding-top:17px;color:var(--muted);font-size:11px;line-height:1.7}
-.save-state{font-size:11px;color:var(--sage);padding:9px 2px}
-@media(max-width:620px){
- header{padding:20px 15px 12px;align-items:flex-start}main{padding:0 14px 55px}
- .header-actions{flex-direction:column}.btn{padding:9px 11px;font-size:12px}
- .toolbar{padding:12px;margin-top:9px}.tools-left{gap:10px}
- .article{padding:17px}.article h3{font-size:21px}
- .form-grid{grid-template-columns:1fr}
- .read-top{padding:12px 14px}.read-page{padding:37px 22px 75px}
- .read-tools .btn{font-size:11px;padding:8px 10px}
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Le Petit Journal</title>
+    <style>
+        :root {
+            --bg-color: #121212;
+            --card-bg: #1e1e1e;
+            --text-main: #e0e0e0;
+            --text-muted: #888;
+            --accent: #d4af37;
+            --font-family: "Georgia", serif;
+        }
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: var(--font-family);
+            margin: 0;
+            padding: 16px;
+            -webkit-font-smoothing: antialiased;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 24px;
+            border-bottom: 1px solid #333;
+            padding-bottom: 16px;
+        }
+        h1 {
+            font-size: 1.8rem;
+            margin: 0 0 8px 0;
+            letter-spacing: 1px;
+        }
+        .subtitle {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            background: var(--card-bg);
+            padding: 10px 14px;
+            border-radius: 8px;
+        }
+        button {
+            background: transparent;
+            color: var(--accent);
+            border: 1px solid var(--accent);
+            padding: 8px 14px;
+            border-radius: 4px;
+            font-family: var(--font-family);
+            cursor: pointer;
+        }
+        button:active {
+            background: var(--accent);
+            color: #000;
+        }
+        #status {
+            text-align: center;
+            color: var(--text-muted);
+            font-style: italic;
+            margin: 40px 0;
+        }
+        .feed-container {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .article-card {
+            background: var(--card-bg);
+            padding: 16px;
+            border-radius: 8px;
+            border-left: 3px solid var(--accent);
+        }
+        .article-title {
+            font-size: 1.1rem;
+            margin: 0 0 8px 0;
+            color: #fff;
+            text-decoration: none;
+            display: block;
+        }
+        .article-title:hover {
+            color: var(--accent);
+        }
+        .article-meta {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+    </style>
 </head>
 <body>
-<header>
- <div class="brand"><div class="moon">☾</div><div><h1>Le Petit Journal</h1><div class="tagline">Un moment pour lire · Depuis ton écran</div></div></div>
- <div class="header-actions"><button class="btn" id="refreshBtn">↻ Actualiser</button><button class="btn" id="settingsBtn">Sources & réglages</button></div>
-</header>
-<main>
- <section class="toolbar">
-  <div class="tools-left">
-   <label class="toggle"><input class="switch" type="checkbox" id="hidePaywall" checked> Paywall ausblenden</label>
-   <label class="toggle"><input class="switch" type="checkbox" id="hideHints"> Paywall-Verdacht filtern</label>
-  </div>
-  <div class="tools-right">
-   <select id="fontChoice" aria-label="Leseschrift">
-    <option value="Georgia,'Times New Roman',serif">Georgia</option>
-    <option value="'Palatino Linotype',Palatino,serif">Palatino</option>
-    <option value="system-ui,sans-serif">System</option>
-    <option value="Arial,sans-serif">Arial</option>
-   </select>
-   <select id="sizeChoice" aria-label="Schriftgröße">
-    <option value="17px">Klein</option><option value="19px" selected>Normal</option><option value="21px">Groß</option><option value="23px">Sehr groß</option>
-   </select>
-  </div>
- </section>
- <div class="section-head"><h2 id="listTitle">Die neuesten Meldungen</h2><span class="small-muted" id="status">Wird geladen …</span></div>
- <nav class="tabs" aria-label="Ansicht">
-  <button class="tab active" data-view="feed">Nachrichten</button>
-  <button class="tab" data-view="saved">Für später gespeichert <span id="savedCount"></span></button>
- </nav>
- <section class="feed" id="feed"><div class="empty"><strong>Ein stiller Moment für die Welt da draußen.</strong>Deine Nachrichten werden gesammelt …</div></section>
- <p class="notice">Le Petit Journal ist ein privater RSS-Reader. Es gibt keine Werbe- oder Analyse-Skripte. Der Abruf über AllOrigins ist ein externer Proxy: Dabei erhält dieser Dienst die angefragten Feed-Adressen. Paywall-Erkennung ist nur ein Hinweis und kann falsch liegen. Gespeichert werden die RSS-Vorschau und Metadaten, nicht der vollständige externe Artikel.</p>
-</main>
 
-<div class="overlay" id="settingsOverlay">
- <section class="modal">
-  <div class="modal-head"><h2>Deine Quellen</h2><button class="btn" id="closeSettings">Schließen</button></div>
-  <p class="help">Füge RSS-Feeds hinzu oder entferne sie. Markiere kostenpflichtige Quellen, damit sie mit dem Paywall-Schalter verschwinden. Deine Quellen bleiben in diesem Browser gespeichert.</p>
-  <div class="form-grid">
-   <div><label class="field-label" for="newName">Quellenname</label><input class="field" id="newName" placeholder="z. B. Tagesschau"></div>
-   <div><label class="field-label" for="newUrl">RSS-Link</label><input class="field" id="newUrl" type="url" placeholder="https://…"></div>
-  </div>
-  <label class="toggle" style="margin-top:13px"><input class="switch" type="checkbox" id="newPaywall"> Diese Quelle ist kostenpflichtig</label>
-  <div style="margin-top:13px"><button class="btn primary" id="addSource">+ Quelle hinzufügen</button></div>
-  <div class="source-list" id="sourceList"></div>
-  <p class="help" style="margin-top:17px">Schriftart und Schriftgröße werden automatisch übernommen. Die gespeicherten Artikel und Einstellungen liegen lokal im Speicher deines Browsers.</p>
- </section>
-</div>
+    <header>
+        <h1>Le Petit Journal</h1>
+        <div class="subtitle">Dark Academia Reader</div>
+    </header>
 
-<div class="read-overlay" id="reader">
- <div class="read-top">
-  <button class="btn quiet" id="backBtn">← Zurück</button>
-  <div class="read-tools"><button class="btn" id="saveBtn">♡ Für später speichern</button><button class="btn" id="openOriginal">Original ↗</button></div>
- </div>
- <article class="read-page">
-  <div class="meta" id="readMeta"></div>
-  <h2 id="readTitle"></h2>
-  <p class="read-deck" id="readDeck"></p>
-  <div class="read-body" id="readBody"></div>
-  <div class="read-source" id="readSource"></div>
-  <div class="save-state" id="saveState"></div>
- </article>
-</div>
+    <div class="controls">
+        <span id="source-count">Lade Feeds...</span>
+        <button onclick="loadAllFeeds()">Actualiser</button>
+    </div>
 
-<script>
-"use strict";
-const DEFAULT_SOURCES=[
- {name:"Deutschlandfunk Nachrichten",url:"https://www.deutschlandfunk.de/nachrichten-100.rss",paywall:false},
- {name:"Deutschlandfunk Politik",url:"https://www.deutschlandfunk.de/politikportal-100.rss",paywall:false},
- {name:"Krautreporter",url:"https://krautreporter.de/feeds.rss",paywall:true},
- {name:"eurotopics",url:"https://www.eurotopics.net/export/de/rss.xml",paywall:false}
-];
-const PROXY="https://dark-academia.nekkakro.workers.dev";
-const KEYS={sources:"lpj_sources_v1",saved:"lpj_saved_v1",font:"lpj_font_v1",size:"lpj_size_v1"};
-const COLORS=["","b1","b2","b3","b4"];
-let sources=readStore(KEYS.sources,DEFAULT_SOURCES), allArticles=[],savedArticles=readStore(KEYS.saved,[]),currentArticle=null,currentView="feed";
-const $=id=>document.getElementById(id);
-function readStore(key,fallback){try{const v=JSON.parse(localStorage.getItem(key));return v??fallback}catch{return fallback}}
-function writeStore(key,value){try{localStorage.setItem(key,JSON.stringify(value))}catch(e){alert("Der lokale Speicher ist voll. Bitte entferne einige gespeicherte Artikel.")}}
-function escapeHTML(s=""){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
-function plain(html=""){const d=document.createElement("div");d.innerHTML=html;return (d.textContent||d.innerText||"").replace(/\s+/g," ").trim()}
-function dateLabel(v){if(!v)return "";const d=new Date(v);return Number.isNaN(d.getTime())?"":d.toLocaleString("de-DE",{dateStyle:"medium",timeStyle:"short"})}
-function isPaywall(a){return /paywall|bezahlschranke|kostenpflichtig|abo erforderlich|nur für abonnenten|premium-inhalt|jetzt abonnieren|subscriber only/i.test((a.title||"")+" "+(a.description||""))}
-function visibleArticles(){
- const list=currentView==="saved"?savedArticles:allArticles;
- return list.filter(a=>{
-  if($("hidePaywall").checked&&a.sourcePaywall)return false;
-  if($("hideHints").checked&&isPaywall(a))return false;
-  return true;
- });
-}
-function render(){
- const items=visibleArticles();
- $("listTitle").textContent=currentView==="saved"?"Deine gespeicherten Artikel":"Die neuesten Meldungen";
- $("savedCount").textContent=savedArticles.length?`(${savedArticles.length})`:"";
- $("feed").innerHTML="";
- if(!items.length){
-  const e=document.createElement("div");e.className="empty";
-  e.innerHTML=currentView==="saved"?"<strong>Noch nichts für später.</strong>Öffne einen Beitrag und bewahre ihn mit einem Herz für deinen nächsten Lesemoment auf.":"<strong>Hier ist es gerade still.</strong>Keine Beiträge für diese Filterauswahl. Passe die Filter an oder aktualisiere deine Feeds.";
-  $("feed").append(e);return;
- }
- items.forEach(a=>{
-  const card=document.createElement("article");card.className="article";card.tabIndex=0;card.setAttribute("role","button");card.setAttribute("aria-label","Artikel öffnen: "+a.title);
-  const ci=Math.max(0,sources.findIndex(s=>s.name===a.source))%COLORS.length;
-  card.innerHTML=`<div class="meta"><span class="badge ${COLORS[ci]}">${escapeHTML(a.source)}</span><span class="date">${escapeHTML(dateLabel(a.date))}</span></div>
-   <h3>${escapeHTML(a.title||"Ohne Titel")}</h3><p class="excerpt">${escapeHTML(a.description||"Für diesen Beitrag gibt es keine Vorschau.")}</p>
-   <div class="card-foot"><span class="card-hint">${a.sourcePaywall?"Als Paywall-Quelle markiert":isPaywall(a)?"Paywall-Hinweis erkannt":""}</span><span class="open-hint">In Ruhe weiterlesen ↗</span></div>`;
-  card.addEventListener("click",()=>openReader(a));
-  card.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();openReader(a)}});
-  $("feed").append(card);
- });
-}
-function parseFeed(xmlText,source,index){
- const doc=new DOMParser().parseFromString(xmlText,"text/xml");
- if(doc.querySelector("parsererror"))throw new Error("Ungültiges XML");
- const items=[...doc.getElementsByTagName("item")];
- const entries=[...doc.getElementsByTagName("entry")];
- const nodes=items.length?items:entries;
- return nodes.map((node,n)=>{
-  const get=tag=>node.getElementsByTagName(tag)[0]?.textContent?.trim()||"";
-  const linkNode=node.getElementsByTagName("link")[0];
-  const link=(linkNode?.textContent?.trim()||linkNode?.getAttribute("href")||source.url);
-  const raw=get("description")||get("summary")||get("content:encoded")||get("content");
-  const description=plain(raw).slice(0,650);
-  const content=plain(get("content:encoded")||get("content")||raw).slice(0,9000);
-  const guid=get("guid")||get("id")||link||`${source.url}-${n}`;
-  return {id:source.url+"|"+guid,source:source.name,sourceUrl:source.url,sourcePaywall:!!source.paywall,title:plain(get("title"))||"Ohne Titel",description,content:content||description,link,date:get("pubDate")||get("published")||get("updated")||get("date")};
- });
-}
-async function fetchOne(source, index){
- const url = "https://api.codetabs.com/v1/proxy?quest=" + encodeURIComponent(source.url);
- const controller = new AbortController(), timer = setTimeout(() => controller.abort(), 10000);
- try {
-  const response = await fetch(url, { signal: controller.signal, cache: "no-store" });
-  if (!response.ok) throw new Error("Status " + response.status);
-  const text = await response.text();
-  if (!text || text.length < 20) throw new Error("Leerer Feed");
-  return parseFeed(text, source, index);
- } catch(e) {
-  console.warn("Fehler bei:", source.name);
-  return []; // Gibt im Fehlerfall eine leere Liste zurück, statt die App abstürzen zu lassen
- } finally {
-  clearTimeout(timer);
- }
-async function refresh(){
- $("refreshBtn").disabled=true;$("status").textContent="Die Feeds werden eingesammelt …";
- const settled=await Promise.allSettled(sources.map(fetchOne));
- allArticles=[];
- let ok=0,errors=[];
- settled.forEach((r,i)=>{if(r.status==="fulfilled"){ok++;allArticles.push(...r.value)}else errors.push(sources[i].name)});
- const seen=new Set();
- allArticles=allArticles.filter(a=>{if(seen.has(a.id))return false;seen.add(a.id);return true});
- allArticles.sort((a,b)=>new Date(b.date||0)-new Date(a.date||0));
- $("status").textContent=errors.length?`${allArticles.length} Beiträge · ${errors.length} Feed(s) nicht erreichbar`:`${allArticles.length} Beiträge · ${ok} Quellen`;
- if(errors.length)console.warn("Nicht geladene Quellen:",errors);
- $("refreshBtn").disabled=false;render();
-}
-function renderSources(){
- $("sourceList").innerHTML=sources.map((s,i)=>`<div class="source-row"><div><strong>${escapeHTML(s.name)}</strong><small>${escapeHTML(s.url)}</small><small>${s.paywall?"Paywall markiert":"Keine Paywall-Markierung"}</small></div><button class="remove" data-remove="${i}" aria-label="${escapeHTML(s.name)} entfernen">×</button></div>`).join("");
-}
-function showSettings(){renderSources();$("settingsOverlay").classList.add("open")}
-function openReader(a){
- currentArticle=a;
- const ci=Math.max(0,sources.findIndex(s=>s.name===a.source))%COLORS.length;
- $("readMeta").innerHTML=`<span class="badge ${COLORS[ci]}">${escapeHTML(a.source)}</span><span class="date">${escapeHTML(dateLabel(a.date))}</span>`;
- $("readTitle").textContent=a.title;
- $("readDeck").textContent=a.description||"";
- const body=$("readBody");body.innerHTML="";
- const paragraphs=(a.content||a.description||"").split(/(?<=[.!?])\s+(?=[A-ZÄÖÜ„“])/).filter(Boolean);
- if(paragraphs.length>1)paragraphs.forEach(p=>{const el=document.createElement("p");el.textContent=p;body.append(el)});
- else body.textContent=a.content||a.description||"Im RSS-Feed ist keine ausführlichere Vorschau enthalten. Öffne den Originalbeitrag, um weiterzulesen.";
- $("readSource").textContent="Quelle: "+a.source+" · Die Ansicht verwendet den vom RSS-Feed gelieferten Textauszug. Der vollständige Artikel bleibt auf der Website des Verlags.";
- updateSaveButton();
- $("reader").classList.add("open");document.body.style.overflow="hidden";$("reader").scrollTop=0;
-}
-function closeReader(){$("reader").classList.remove("open");document.body.style.overflow="";currentArticle=null}
-function updateSaveButton(){
- const exists=currentArticle&&savedArticles.some(a=>a.id===currentArticle.id);
- $("saveBtn").textContent=exists?"♥ Gespeichert · Entfernen":"♡ Für später speichern";
- $("saveState").textContent=exists?"Dieser Beitrag liegt in deiner lokalen Leseliste.":"";
-}
-function toggleSave(){
- if(!currentArticle)return;
- const i=savedArticles.findIndex(a=>a.id===currentArticle.id);
- if(i>=0)savedArticles.splice(i,1);else savedArticles.unshift({...currentArticle,savedAt:new Date().toISOString()});
- writeStore(KEYS.saved,savedArticles);updateSaveButton();$("savedCount").textContent=savedArticles.length?`(${savedArticles.length})`:"";
- if(currentView==="saved")render();
-}
-$("refreshBtn").addEventListener("click",refresh);
-$("settingsBtn").addEventListener("click",showSettings);
-$("closeSettings").addEventListener("click",()=>$("settingsOverlay").classList.remove("open"));
-$("settingsOverlay").addEventListener("click",e=>{if(e.target===$("settingsOverlay"))e.target.classList.remove("open")});
-$("sourceList").addEventListener("click",e=>{const b=e.target.closest("[data-remove]");if(!b)return;sources.splice(Number(b.dataset.remove),1);writeStore(KEYS.sources,sources);renderSources();refresh()});
-$("addSource").addEventListener("click",()=>{
- const name=$("newName").value.trim(),url=$("newUrl").value.trim();
- let parsed;try{parsed=new URL(url)}catch{alert("Bitte gib einen gültigen RSS-Link ein.");return}
- if(!["http:","https:"].includes(parsed.protocol)){alert("Bitte nutze einen http- oder https-Link.");return}
- if(!name){alert("Bitte gib einen Namen für die Quelle ein.");return}
- if(sources.some(s=>s.url===url)){alert("Diese RSS-Adresse ist bereits eingetragen.");return}
- sources.push({name,url,paywall:$("newPaywall").checked});writeStore(KEYS.sources,sources);
- $("newName").value="";$("newUrl").value="";$("newPaywall").checked=false;renderSources();refresh();
-});
-$("hidePaywall").addEventListener("change",render);$("hideHints").addEventListener("change",render);
-document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>{currentView=b.dataset.view;document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active",t===b));render()}));
-$("backBtn").addEventListener("click",closeReader);$("saveBtn").addEventListener("click",toggleSave);
-$("openOriginal").addEventListener("click",()=>{if(currentArticle?.link)window.open(currentArticle.link,"_blank","noopener,noreferrer")});
-$("fontChoice").addEventListener("change",e=>{document.documentElement.style.setProperty("--reading-font",e.target.value);localStorage.setItem(KEYS.font,e.target.value)});
-$("sizeChoice").addEventListener("change",e=>{document.documentElement.style.setProperty("--reading-size",e.target.value);localStorage.setItem(KEYS.size,e.target.value)});
-const storedFont=localStorage.getItem(KEYS.font),storedSize=localStorage.getItem(KEYS.size);
-if(storedFont){$("fontChoice").value=storedFont;document.documentElement.style.setProperty("--reading-font",storedFont)}
-if(storedSize){$("sizeChoice").value=storedSize;document.documentElement.style.setProperty("--reading-size",storedSize)}
-document.addEventListener("keydown",e=>{if(e.key==="Escape"){closeReader();$("settingsOverlay").classList.remove("open")}});
-$("savedCount").textContent=savedArticles.length?`(${savedArticles.length})`:"";
-refresh();
-</script>
+    <div id="status">Bereit zum Laden.</div>
+    <div id="articles" class="feed-container"></div>
+
+    <script>
+        // Deine RSS-Quellen hier eintragen
+        const SOURCES = [
+            { name: "Le Monde", url: "https://www.lemonde.fr/rss/une.xml" },
+            { name: "Tagesschau", url: "https://www.tagesschau.de/xml/rss2" }
+        ];
+
+        // Wir nutzen einen extrem stabilen öffentlichen Fallback-Proxy, der CORS umgeht
+        const PROXY = "https://api.allorigins.win/raw?url=";
+
+        async function loadAllFeeds() {
+            const statusEl = document.getElementById("status");
+            const container = document.getElementById("articles");
+            const countEl = document.getElementById("source-count");
+            
+            statusEl.textContent = "Wird geladen ...";
+            container.innerHTML = "";
+            
+            let allArticles = [];
+
+            for (let i = 0; i < SOURCES.length; i++) {
+                const source = SOURCES[i];
+                countEl.textContent = `Lade ${i + 1} von ${SOURCES.length}...`;
+
+                try {
+                    const controller = new AbortController();
+                    const timer = setTimeout(() => controller.abort(), 6000); // Harter Stopp nach 6 Sek. pro Feed
+
+                    const response = await fetch(PROXY + encodeURIComponent(source.url), {
+                        signal: controller.signal,
+                        cache: "no-store"
+                    });
+                    
+                    clearTimeout(timer);
+
+                    if (!response.ok) throw new Error("HTTP " + response.status);
+                    
+                    const text = await response.text();
+                    const parser = new DOMParser();
+                    const xml = parser.parseFromString(text, "text/xml");
+                    
+                    const items = xml.querySelectorAll("item");
+                    items.forEach(item => {
+                        const title = item.querySelector("title")?.textContent || "Kein Titel";
+                        const link = item.querySelector("link")?.textContent || "#";
+                        const pubDate = item.querySelector("pubDate")?.textContent || "";
+                        
+                        allArticles.push({
+                            title: title,
+                            link: link,
+                            source: source.name,
+                            date: new Date(pubDate).toLocaleDateString()
+                        });
+                    });
+
+                } catch (e) {
+                    console.warn(`Überspringe ${source.name} wegen Fehler:`, e.message);
+                }
+            }
+
+            if (allArticles.length === 0) {
+                statusEl.textContent = "Feeds zur Zeit nicht erreichbar.";
+                countEl.textContent = "0 Quellen aktiv";
+                return;
+            }
+
+            statusEl.textContent = "";
+            countEl.textContent = `${allArticles.length} Beiträge geladen`;
+
+            // Nach Datum sortieren (neueste zuerst, falls Datum lesbar)
+            allArticles.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            // Auf dem Bildschirm anzeigen
+            allArticles.forEach(art => {
+                const card = document.createElement("div");
+                card.className = "article-card";
+                card.innerHTML = `
+                    <a href="${art.link}" target="_blank" class="article-title">${art.title}</a>
+                    <div class="article-meta">${art.source} &bull; ${art.date !== "Invalid Date" ? art.date : ""}</div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // Beim Start direkt einmal ausführen
+        loadAllFeeds();
+    </script>
 </body>
 </html>
