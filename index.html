@@ -226,23 +226,20 @@ function parseFeed(xmlText,source,index){
  });
 }
 async function fetchOne(source, index){
- const url = "https://api.allorigins.win/get?url=" + encodeURIComponent(source.url);
- const controller = new AbortController(), timer = setTimeout(() => controller.abort(), 20000);
+ const url = "https://api.codetabs.com/v1/proxy?quest=" + encodeURIComponent(source.url);
+ const controller = new AbortController(), timer = setTimeout(() => controller.abort(), 10000);
  try {
   const response = await fetch(url, { signal: controller.signal, cache: "no-store" });
-  if (!response.ok) throw new Error("HTTP-Status " + response.status);
-  const data = await response.json();
-  const text = data.contents;
-  if (!text || text.length < 20) throw new Error("Feed leer/blockiert");
+  if (!response.ok) throw new Error("Status " + response.status);
+  const text = await response.text();
+  if (!text || text.length < 20) throw new Error("Leerer Feed");
   return parseFeed(text, source, index);
  } catch(e) {
-  // Zeigt den exakten Fehler direkt auf dem Bildschirm an!
-  $("status").textContent = `Fehler bei ${source.name}: ${e.message}`;
-  throw e;
+  console.warn("Fehler bei:", source.name);
+  return []; // Gibt im Fehlerfall eine leere Liste zurück, statt die App abstürzen zu lassen
  } finally {
   clearTimeout(timer);
  }
-}
 async function refresh(){
  $("refreshBtn").disabled=true;$("status").textContent="Die Feeds werden eingesammelt …";
  const settled=await Promise.allSettled(sources.map(fetchOne));
