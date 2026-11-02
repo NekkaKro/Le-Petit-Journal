@@ -109,14 +109,20 @@
     <div id="articles" class="feed-container"></div>
 
     <script>
-        // Deine RSS-Quellen hier eintragen
+        // TRAGE HIER DEINE EIGENEN QUELLEN EIN:
         const SOURCES = [
-            { name: "Le Monde", url: "https://www.lemonde.fr/rss/une.xml" },
             { name: "Tagesschau", url: "https://www.tagesschau.de/xml/rss2" }
+            { name: "Deutschlandfunk Nachrichten", url: "https://www.deutschlandfunk.de/nachrichten-100.rss" }
+        { name: "Deutschlandfunk Politik", url: "https://www.deutschlandfunk.de/politikportal-100.rss" }
+        { name: "Krautreporter", url: "https://krautreporter.de/feeds.rss" } 
+        { name: "eurotopics", url: "https://www.eurotopics.net/export/de/rss.xml" }
+        
+            // Füge weitere Quellen einfach so hinzu:
+            // { name: "Dein Feed Name", url: "https://deine-url.de/rss" },
         ];
 
-        // Wir nutzen einen extrem stabilen öffentlichen Fallback-Proxy, der CORS umgeht
-        const PROXY = "https://api.allorigins.win/raw?url=";
+        // ERSETZE HIER DEINE CLOUDFLARE WORKER URL (wichtig: das ?url= am Ende muss bleiben!):
+        const PROXY = "https://dark-academia.nekkakro.workers.dev";
 
         async function loadAllFeeds() {
             const statusEl = document.getElementById("status");
@@ -134,7 +140,7 @@
 
                 try {
                     const controller = new AbortController();
-                    const timer = setTimeout(() => controller.abort(), 6000); // Harter Stopp nach 6 Sek. pro Feed
+                    const timer = setTimeout(() => controller.abort(), 6000); // Stoppt hängende Feeds nach 6 Sek.
 
                     const response = await fetch(PROXY + encodeURIComponent(source.url), {
                         signal: controller.signal,
@@ -177,7 +183,7 @@
             statusEl.textContent = "";
             countEl.textContent = `${allArticles.length} Beiträge geladen`;
 
-            // Nach Datum sortieren (neueste zuerst, falls Datum lesbar)
+            // Nach Datum sortieren (neueste zuerst)
             allArticles.sort((a, b) => new Date(b.date) - new Date(a.date));
 
             // Auf dem Bildschirm anzeigen
