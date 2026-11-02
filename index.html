@@ -168,7 +168,7 @@ const DEFAULT_SOURCES=[
  {name:"Krautreporter",url:"https://krautreporter.de/feeds.rss",paywall:true},
  {name:"eurotopics",url:"https://www.eurotopics.net/export/de/rss.xml",paywall:false}
 ];
-const PROXY="https://corsproxy.io/?url=";
+const PROXY="https://api.codetabs.com/v1/proxy?quest=;
 const KEYS={sources:"lpj_sources_v1",saved:"lpj_saved_v1",font:"lpj_font_v1",size:"lpj_size_v1"};
 const COLORS=["","b1","b2","b3","b4"];
 let sources=readStore(KEYS.sources,DEFAULT_SOURCES), allArticles=[],savedArticles=readStore(KEYS.saved,[]),currentArticle=null,currentView="feed";
